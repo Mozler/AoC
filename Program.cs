@@ -1075,6 +1075,36 @@ namespace DSA
             return total;
         }
     }
+    public class Day1
+    {
+        public int AdventDay1Puzzle1(string u)
+        {
+            int total = 0;
+            string[] sarr = u.Split('\n');
+            var digitStrings = new Dictionary<string, char>() { { "one", '1' }, { "two", '2' }, { "three", '3' }, { "four", '4' }, { "five", '5' }, { "six", '6' }, { "seven", '7' }, { "eight", '8' }, { "nine", '9' }, { "zero", '0' }, { "1", '1' }, { "2", '2' }, { "3", '3' }, { "4", '4' }, { "5", '5' }, { "6", '6' }, { "7", '7' }, { "8", '8' }, { "9", '9' }, { "0", '0' } };
+            foreach (string str in sarr)
+            {
+                var digits = new List<char>();
+
+                for (int i = 0; i < str.Length; i++)
+                {
+                    foreach (string digitStr in digitStrings.Keys)
+                    {
+                        if (str[i..].StartsWith(digitStr))
+                        {
+                            digits.Add(digitStrings[digitStr]);
+                        }
+                    }
+                }
+
+                if (digits.Count == 0) { continue; }
+                if (digits.Count == 1) { digits.Add(digits[0]); }
+                System.Console.WriteLine(digits[0] + " " + digits[^1]);
+                total += int.Parse(digits[0] + "" + digits[^1]);
+            }
+            return total;
+        }
+    }
 }
 
 // public class DayX
