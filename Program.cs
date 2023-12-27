@@ -15,14 +15,15 @@ namespace DSA
         static void Main(string[] args)
         {
 
-            //string input = new StreamReader("./inputs/7 test input.txt").ReadToEnd();
-            string input = new StreamReader("./inputs/7 input.txt").ReadToEnd();
+            string input = new StreamReader("./inputs/9 test input.txt").ReadToEnd();
+            // string input = new StreamReader("./inputs/9 input.txt").ReadToEnd();
             System.Console.WriteLine(input.Length);
-            //System.Console.WriteLine(new Day7().Puzzle1(input.Split("\r\n")));
-            System.Console.WriteLine(new Day7().Puzzle2(input.Split("\r\n")));
+            System.Console.WriteLine(new Day9().Puzzle1(input.Split("\r\n")));
+            // System.Console.WriteLine(new Day9().Puzzle2(input.Split("\r\n")));
         }
     }
-    public class Day8
+
+    public class Day9
     {
         public long Puzzle2(string[] args)
         {
@@ -31,6 +32,104 @@ namespace DSA
         public long Puzzle1(string[] args)
         {
             return 0;
+        }
+    }
+    public class Day8
+    {
+        public long Puzzle2(string[] args)
+        {
+            List<string> targets = new();
+            List<long> steps = new();
+            Dictionary<string, string[]> paths = new();
+            string instructions = args[0];
+            for (int i = 2; i < args.Length; i++)
+            {
+                paths.Add(args[i][..3], new string[] { args[i][7..10], args[i][12..15] });
+
+                if (args[i][2] == 'A')
+                {
+                    targets.Add(args[i][..3]);
+                }
+            }
+            long stepCount = 0;
+            int pointer = 0;
+            int nextTarget;
+            while (targets.Count != 0)
+            {
+                stepCount++;
+                if (pointer >= instructions.Length)
+                {
+                    pointer = 0;
+                }
+                if (instructions[pointer] == 'L')
+                {
+                    nextTarget = 0;
+                }
+                else
+                {
+                    nextTarget = 1;
+                }
+                for (int i = targets.Count - 1; i >= 0; i--)
+                {
+                    targets[i] = paths[targets[i]][nextTarget];
+                    if (targets[i][2] == 'Z')
+                    {
+                        steps.Add(stepCount);
+                        targets.RemoveAt(i);
+                    }
+                }
+                pointer++;
+            }
+            return LCM(steps);
+        }
+        static long gcd(long n1, long n2)
+        {
+            if (n2 == 0)
+            {
+                return n1;
+            }
+            else
+            {
+                return gcd(n2, n1 % n2);
+            }
+        }
+
+        public static long LCM(List<long> numbers)
+        {
+            return numbers.Aggregate((S, val) => S * val / gcd(S, val));
+        }
+
+        public long Puzzle1(string[] args)
+        {
+            Dictionary<string, string[]> paths = new();
+            string instructions = args[0];
+            for (int i = 2; i < args.Length; i++)
+            {
+                paths.Add(args[i][..3], new string[] { args[i][7..10], args[i][12..15] });
+            }
+            string target = "AAA";
+            long stepCount = 0;
+            int pointer = 0;
+            int nextTarget;
+            while (target != "ZZZ")
+            {
+                stepCount++;
+                if (pointer >= instructions.Length)
+                {
+                    pointer = 0;
+                }
+                if (instructions[pointer] == 'L')
+                {
+                    nextTarget = 0;
+                }
+                else
+                {
+                    nextTarget = 1;
+                }
+                target = paths[target][nextTarget];
+                pointer++;
+            }
+            return stepCount;
         }
     }
     public class Day7
