@@ -15,11 +15,11 @@ namespace DSA
         static void Main(string[] args)
         {
 
-            string input = new StreamReader("./inputs/9 test input.txt").ReadToEnd();
-            // string input = new StreamReader("./inputs/9 input.txt").ReadToEnd();
+            // string input = new StreamReader("./inputs/9 test input.txt").ReadToEnd();
+            string input = new StreamReader("./inputs/9 input.txt").ReadToEnd();
             System.Console.WriteLine(input.Length);
-            System.Console.WriteLine(new Day9().Puzzle1(input.Split("\r\n")));
-            // System.Console.WriteLine(new Day9().Puzzle2(input.Split("\r\n")));
+            // System.Console.WriteLine(new Day9().Puzzle1(input.Split("\r\n")));
+            System.Console.WriteLine(new Day9().Puzzle2(input.Split("\r\n")));
         }
     }
 
@@ -27,11 +27,44 @@ namespace DSA
     {
         public long Puzzle2(string[] args)
         {
-            return 0;
+            List<int> forecasts = new();
+            foreach (string sensorData in args)
+            {
+                string[] readings = sensorData.Split(" ").Reverse().ToArray();
+                List<int[]> sequences = new() { readings.Select(n => Convert.ToInt32(n)).ToArray() };
+                sequences = GetSequences(sequences);
+                forecasts.Add(sequences.Select(n => n[^1]).ToArray().Sum());
+            }
+
+            return forecasts.Sum();
         }
         public long Puzzle1(string[] args)
         {
-            return 0;
+            List<int> forecasts = new();
+            foreach (string sensorData in args)
+            {
+                string[] readings = sensorData.Split(" ");
+                List<int[]> sequences = new() { readings.Select(n => Convert.ToInt32(n)).ToArray() };
+                sequences = GetSequences(sequences);
+                forecasts.Add(sequences.Select(n => n[^1]).ToArray().Sum());
+            }
+
+            return forecasts.Sum();
+        }
+
+        public List<int[]> GetSequences(List<int[]> sequences)
+        {
+            if (sequences[^1].All(n => n == 0) || sequences[^1].Length == 1)
+            {
+                return sequences;
+            }
+            int[] newSequence = new int[sequences[^1].Length - 1];
+            for (int i = 0; i < newSequence.Length; i++)
+            {
+                newSequence[i] = sequences[^1][i + 1] - sequences[^1][i];
+            }
+            sequences.Add(newSequence);
+            return GetSequences(sequences);
         }
     }
     public class Day8
